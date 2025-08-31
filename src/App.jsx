@@ -5,7 +5,7 @@ import PauseOverlay from "./PauseOverlay.jsx";
 import Leaderboard from "./Leaderboard.jsx";
 import Target from "./Target.jsx";
 
-// Utility: use stable interval that respects pause
+
 function useGameTimer(active, intervalMs, cb) {
   const savedCb = useRef(cb);
   useEffect(() => { savedCb.current = cb; }, [cb]);
@@ -16,7 +16,7 @@ function useGameTimer(active, intervalMs, cb) {
   }, [active, intervalMs]);
 }
 
-// Simple beep with WebAudio (no assets required)
+
 function useBeep() {
   const ctxRef = useRef(null);
   const ensureCtx = () => {
@@ -39,7 +39,7 @@ function useBeep() {
 const START_LIVES = 3;
 const TARGET_BASE_SIZE = 72; // px
 const TARGET_MIN_SIZE = 36;
-const BASE_TIME = 2.0; // seconds to click at round 1
+const BASE_TIME = 2.0; 
 
 export default function App() {
   const [running, setRunning] = useState(false);
@@ -56,11 +56,11 @@ export default function App() {
 
   const beep = useBeep();
 
-  // Difficulty scaling: time shrinks, target shrinks, also random movement
+  
   const timePerRound = useMemo(() => Math.max(0.6, BASE_TIME - (round - 1) * 0.12), [round]);
   const targetSize = useMemo(() => Math.max(TARGET_MIN_SIZE, TARGET_BASE_SIZE - (round - 1) * 4), [round]);
 
-  // Resize observer to keep board bounds
+ 
   useEffect(() => {
     const el = boardRef.current;
     if (!el) return;
@@ -73,7 +73,7 @@ export default function App() {
   }, []);
 
   const spawnTarget = () => {
-    // Keep inside padding
+   
     const pad = 12;
     const x = Math.random() * (boardSize.w - targetSize - pad * 2) + pad;
     const y = Math.random() * (boardSize.h - targetSize - pad * 2) + pad;
@@ -103,14 +103,14 @@ export default function App() {
     setPaused(false);
     setRound(1);
     setTimeLeft(BASE_TIME);
-    // save best
+    
     if (score > best) {
       localStorage.setItem("bestScore", String(score));
       setBest(score);
     }
   };
 
-  // Timer tick (100ms granularity for smoothness)
+  
   useGameTimer(running && !paused, 100, () => {
     setTimeLeft((t) => {
       const nt = Math.max(0, t - 0.1);
@@ -134,13 +134,13 @@ export default function App() {
     });
   });
 
-  // When round changes (due to success), refresh timer and spawn new target
+  
   useEffect(() => {
     if (running) {
       setTimeLeft(timePerRound);
       spawnTarget();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [round, running]);
 
   const onHit = () => {
@@ -152,10 +152,10 @@ export default function App() {
 
   const togglePause = () => setPaused((p) => !p);
 
-  // Initial spawn when starting
+  
   useEffect(() => {
     if (running) resetRound();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, [running]);
 
   const gameOver = !running && (score > 0 || lives !== START_LIVES);

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --brand: 56 189 248; /* cyan-400 */
+  --brand: 56 189 248; 
 }
 
 .glass {
